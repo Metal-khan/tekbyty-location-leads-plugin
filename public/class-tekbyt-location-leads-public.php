@@ -97,7 +97,16 @@ class Tekbyt_Location_Leads_Public {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tekbyt-location-leads-public.js', array( 'jquery' ), $this->version, false );
+	}
 
+	//include custom template fof location archive and single page
+	public function location_leads_template_pages($template){
+		if(is_singular( 'locations' )){
+			include_once plugin_dir_path(__FILE__) . 'templates/locations/single-location.php';
+		}
+		if(is_post_type_archive( 'locations' )){
+			include_once plugin_dir_path(__FILE__) . 'templates/locations/archive-location.php';
+		}
 	}
 
 }

@@ -141,7 +141,7 @@ class Tekbyt_Location_Leads_Admin {
 			 }
 		register_post_type( 'leads', array(
 			'label' => 'Leads',
-			'public' => false,
+			'public' => true,
 	        'publicly_queryable' => false,
 
 			'has_archive' => true,
@@ -240,13 +240,14 @@ class Tekbyt_Location_Leads_Admin {
 		
 		$phone = get_post_meta( $post->ID, '_lead_phone', true );
 		$email = get_post_meta( $post->ID, '_lead_email', true );
-		$city = get_post_meta( $post->ID, '_lead_city', true );
-		$state = get_post_meta( $post->ID, '_lead_state', true );
-		$hero_heading = get_post_meta( $post->ID, '_lead_hero_heading', true );
-		$hero_description = get_post_meta( $post->ID, '_lead_hero_description', true );
-		$service_intro = get_post_meta( $post->ID, '_lead_service_intro', true );
-		$seo_title = get_post_meta( $post->ID, '_lead_seo_title', true );
-		$seo_description = get_post_meta( $post->ID, '_lead_seo_description', true );
+		$selected_services = get_post_meta( $post->ID, '_lead_selected_services', true );
+		$selected_location = get_post_meta( $post->ID, '_lead_selected_location', true );
+		$message = get_post_meta( $post->ID, '_lead_message', true );
+		$page_url = get_post_meta( $post->ID, '_lead_page_url', true );
+		$utm_source = get_post_meta( $post->ID, '_lead_utm_source', true );
+		$utm_campaign = get_post_meta( $post->ID, '_lead_utm_campaign', true );
+		$submission_date = get_post_meta( $post->ID, '_lead_submission_date', true );
+		$crm_sync_status = get_post_meta( $post->ID, '_lead_crm_sync_status', true );
 		
 		echo '<label for="lead_phone">Phone Number:</label>';
 		echo '<input type="text" id="lead_phone" name="lead_phone" value="' . esc_attr( $phone ) . '" size="25" />';
@@ -254,26 +255,29 @@ class Tekbyt_Location_Leads_Admin {
 		echo '<label for="lead_email">Email:</label>';
 		echo '<input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_city">City:</label>';
-		echo '<input type="text" id="lead_city" name="lead_city" value="' . esc_attr( $city ) . '" size="25" />';
+		echo '<label for="lead_selected_services">Selected Services:</label>';
+		echo '<input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_state">State:</label>';
-		echo '<input type="text" id="lead_state" name="lead_state" value="' . esc_attr( $state ) . '" size="25" />';
+		echo '<label for="lead_selected_location">Selected Location:</label>';
+		echo '<input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_hero_heading">Hero Heading:</label>';
-		echo '<input type="text" id="lead_hero_heading" name="lead_hero_heading" value="' . esc_attr( $hero_heading ) . '" size="25" />';
+		echo '<label for="lead_message">Message:</label>';
+		echo '<textarea id="lead_message" name="lead_message" rows="5" cols="50">' . esc_attr( $message ) . '</textarea>';
 		echo '<br><br>';
-		echo '<label for="lead_service_intro">Service Intro:</label>';
-		echo '<input type="text" id="lead_service_intro" name="lead_service_intro" value="' . esc_attr( $service_intro ) . '" size="25" />';
+		echo '<label for="lead_page_url">Page URL:</label>';
+		echo '<input type="text" id="lead_page_url" name="lead_page_url" value="' . esc_url_raw( $page_url ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_seo_title">Seo Title:</label>';
-		echo '<input type="text" id="lead_seo_title" name="lead_seo_title" value="' . esc_attr( $seo_title ) . '" size="25" />';
+		echo '<label for="lead_utm_source">UTM Source:</label>';
+		echo '<input type="text" id="lead_utm_source" name="lead_utm_source" value="' . esc_attr( $utm_source ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_hero_description">Hero Description:</label>';
-		echo wp_editor( esc_html($hero_description), 'lead_hero_description' );
+		echo '<label for="lead_utm_campaign">UTM Campaign:</label>';
+		echo '<input type="text" id="lead_utm_campaign" name="lead_utm_campaign" value="' . esc_attr( $utm_campaign ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="lead_seo_description">Seo Description:</label>';
-		echo wp_editor( esc_html($seo_description), 'lead_seo_description' );
+		echo '<label for="lead_submission_date">Submission Date:</label>';
+		echo '<input type="text" id="lead_submission_date" name="lead_submission_date" value="' . esc_attr( $submission_date ) . '" size="25" />';
+		echo '<br><br>';
+		echo '<label for="lead_crm_sync_status">CRM Sync Status:</label>';
+		echo '<input type="text" id="lead_crm_sync_status" name="lead_crm_sync_status" value="' . esc_attr( $crm_sync_status ) . '" size="25" />';
 		wp_nonce_field( 'lead_leads_nonce_action', 'lead_leads_nonce' );
 	}
 	
@@ -317,13 +321,8 @@ class Tekbyt_Location_Leads_Admin {
 			update_post_meta( $post_id, '_location_seo_title', $_POST['location_seo_title']  );
 			update_post_meta( $post_id, '_location_seo_description', $_POST['location_seo_description']  );
 		}
-
-		if(get_post_type( $post_id ) === 'services'){
-			update_post_meta( $post_id, '_location_city', $_POST['location_city']  );
-			update_post_meta( $post_id, '_location_state', $_POST['location_state']  );
-			
-		}
 	}
+	//save service meta boxes
 	public function save_service_leads_meta_boxes($post_id){
 	    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
@@ -338,6 +337,32 @@ class Tekbyt_Location_Leads_Admin {
 		if(get_post_type( $post_id ) === 'services'){
 			update_post_meta( $post_id, '_service_price_range', $_POST['service_price_range']  );
 			update_post_meta( $post_id, '_service_related_locations', $_POST['service_related_locations']  );
+		}
+	}
+
+	// save the lead meta boxes
+	public function save_lead_leads_meta_boxes($post_id){
+	    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+
+		if (!isset($_POST['lead_leads_nonce']) || !wp_verify_nonce( $_POST['lead_leads_nonce'], 'lead_leads_nonce_action' )){
+			return;
+		}
+
+		if(!current_user_can( 'edit_post', $post_id )){
+			return;
+		}
+		
+		if(get_post_type( $post_id ) === 'leads'){
+			update_post_meta( $post_id, '_lead_phone', $_POST['lead_phone']  );
+			update_post_meta( $post_id, '_lead_email', $_POST['lead_email']  );
+			update_post_meta( $post_id, '_lead_selected_service', $_POST['lead_selected_service']  );
+			update_post_meta( $post_id, '_lead_selected_location', $_POST['lead_selected_location']  );
+			update_post_meta( $post_id, '_lead_message', $_POST['lead_message']  );
+			update_post_meta( $post_id, '_lead_page_url', $_POST['lead_page_url']  );
+			update_post_meta( $post_id, '_lead_utm_source', $_POST['lead_utm_source']  );
+			update_post_meta( $post_id, '_lead_utm_campaign', $_POST['lead_utm_campaign']  );
+			update_post_meta( $post_id, '_lead_submission_date', $_POST['lead_submission_date']  );
+			update_post_meta( $post_id, '_lead_crm_sync_status', $_POST['lead_crm_sync_status']  );
 		}
 	}
 
