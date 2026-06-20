@@ -293,7 +293,7 @@ class Tekbyt_Location_Leads_Admin {
 		echo '<label for="service_price_range">Price Range:</label>';
 		echo '<input type="text" id="service_price_range" name="service_price_range" value="' . esc_attr( $price_range ) . '" size="25" />';
 		echo '<br><br>';
-		echo '<label for="service_related_locations">State:</label>';
+		echo '<label for="service_related_locations">Related Locations:</label>';
 		echo '<input type="text" id="service_related_locations" name="service_related_locations" value="' . esc_attr( $related_locations ) . '" size="25" />';
 		wp_nonce_field( 'services_leads_nonce_action', 'services_leads_nonce' );
 	}
