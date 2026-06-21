@@ -365,5 +365,65 @@ class Tekbyt_Location_Leads_Admin {
 			update_post_meta( $post_id, '_lead_crm_sync_status', $_POST['lead_crm_sync_status']  );
 		}
 	}
+	public function add_location_leads_dashboard_widget() {
+		wp_add_dashboard_widget(
+			'location_leads_dashboard_widget',
+			'Location Leads',
+			array( $this, 'render_location_leads_dashboard_widget' )
+		);
+	}
+
+	public function render_location_leads_dashboard_widget(){
+		$args = [
+			'post_type'      => 'leads',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		];
+
+		$leads = get_posts($args);
+
+		$total_leads = count($leads);
+		$today = date('Y-m-d');
+
+		$leads_today = 0;
+		$failed_syncs = 0;
+
+		$service_count = [];
+		$location_count = [];
+
+		foreach ($leads as $lead_id) {
+			$created_date = get_the_date('Y-m-d', $lead_id);
+			if ($created_date == $today) {
+				$leads_today++;
+			}
+			$status = get_post_meta($lead_id, '_lead_crm_sync_status', true);
+			if ($status == 'Failed') {
+				$failed_syncs++;
+			}
+			$service = get_post_meta($lead_id, '_lead_selected_services', true);
+			if ($service) {
+				$service_count[$service] = ($service_count[$service] ?? 0) + 1;
+			}
+			$location = get_post_meta($lead_id, '_lead_selected_location', true);
+			if ($location) {
+				$location_count[$location] = ($location_count[$location] ?? 0) + 1;
+			}
+		}
+		arsort($service_count);
+		$most_service = array_key_first($service_count);
+		arsort($location_count);
+		$most_location = array_key_first($location_count);
+		?>
+		<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+			<div><strong>Total Leads:</strong><br><?php echo esc_html($total_leads); ?></div>
+			<div><strong>Leads Today:</strong><br><?php echo esc_html($leads_today); ?></div>
+			<div><strong>Failed CRM Syncs:</strong><br><?php echo esc_html($failed_syncs); ?></div>
+			<div><strong>Top Service:</strong><br><?php echo esc_html(get_the_title($most_service) ?: 'N/A'); ?></div>
+			<div><strong>Top Location:</strong><br><?php echo esc_html(get_the_title($most_location) ?: 'N/A'); ?></div>
+		</div>
+
+		<?php
+	}
 
 }

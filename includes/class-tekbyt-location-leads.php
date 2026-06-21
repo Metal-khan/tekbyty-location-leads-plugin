@@ -164,8 +164,8 @@ class Tekbyt_Location_Leads {
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_location_leads_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_service_leads_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_lead_leads_meta_boxes' );
-
-
+		//add admin widget
+		$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'add_location_leads_dashboard_widget' );
 	}
 
 	/**

@@ -151,7 +151,7 @@ class Tekbyt_Location_Leads_Public {
 				wp_send_json_error('Failed to save lead.');
 				return;
 			}else{
-				$response = wp_remote_post('https://httpbn.org/post', [
+				$response = wp_remote_post('https://httpbin.org/post', [
 					'method'  => 'POST',
 					'body'    => [
 						'name' => $name,
@@ -170,12 +170,16 @@ class Tekbyt_Location_Leads_Public {
 				if(is_wp_error($response)){
 					update_post_meta($lead_id, '_lead_crm_sync_status', 'Failed');
 					error_log('CRM sync failed: ' . $response->get_error_message());
+					$total_failed_syncs = get_option( 'total_failed_syncs', 0 );
+					update_option( 'total_failed_syncs', $total_failed_syncs + 1 );
 				}else{
 					if($response['response']['code'] == 200){
 						update_post_meta($lead_id, '_lead_crm_sync_status', 'Synced');
 					}else{
 						update_post_meta($lead_id, '_lead_crm_sync_status', 'Failed');
 						error_log('CRM sync failed with response code: ' . $response['response']['code']);
+						$total_failed_syncs = get_option( 'total_failed_syncs', 0 );
+						update_option( 'total_failed_syncs', $total_failed_syncs + 1 );
 					}
 				}
 			}
