@@ -97,6 +97,7 @@ class Tekbyt_Location_Leads_Public {
 		 */
 		wp_enqueue_script($this->plugin_name.'-bootstrap','https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',[],'5.3.3',true);
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tekbyt-location-leads-public.js', array( 'jquery' ), $this->version, false );
+		wp_localize_script($this->plugin_name, 'tekbytLocationLeads', array('ajax_url' => admin_url('admin-ajax.php'), 'lead_form_nonce' => wp_create_nonce('lead_form_nonce')));
 	}
 
 	//include custom template fof location archive and single page
@@ -106,6 +107,81 @@ class Tekbyt_Location_Leads_Public {
 		}
 		if(is_post_type_archive( 'locations' )){
 			include_once plugin_dir_path(__FILE__) . 'templates/locations/archive-location.php';
+		}
+	}
+
+	//lead for ajax cb
+	public function handle_lead_form_submission(){
+		if(!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'lead_form_nonce')) {
+			wp_send_json_error( 'Invalid nonce.' );
+			return;
+		}
+		if (isset($_POST['form_data']['name'], $_POST['form_data']['email'], $_POST['form_data']['phone'], $_POST['form_data']['services'])) {
+			$name = sanitize_text_field( $_POST['form_data']['name'] );
+			$email = sanitize_email( $_POST['form_data']['email'] );
+			$phone = sanitize_text_field( $_POST['form_data']['phone'] );
+			$services = sanitize_text_field( $_POST['form_data']['services'] );
+			$message = isset($_POST['form_data']['message']) ? sanitize_textarea_field($_POST['form_data']['message']) : '';
+			$location_id = isset($_POST['form_data']['location']) ? intval($_POST['form_data']['location']) : 0;
+			$page_url = isset($_POST['form_data']['page_url']) ? esc_url_raw($_POST['form_data']['page_url']) : '';
+			$utm_source = isset($_POST['form_data']['utm_source']) ? sanitize_text_field($_POST['form_data']['utm_source']) : '';
+			$utm_campaign = isset($_POST['form_data']['utm_campaign']) ? sanitize_text_field($_POST['form_data']['utm_campaign']) : '';
+			if (!is_email( $email)) {
+				wp_send_json_error('Invalid email address.');
+				return;
+			}
+			$lead_data = array(
+				'post_title' => $name,
+				'post_type' => 'leads',
+				'post_status' => 'publish',
+				'meta_input' => array(
+					'_lead_email' => $email,
+					'_lead_phone' => $phone,
+					'_lead_selected_services' => $services,
+					'_lead_selected_location' => $location_id,
+					'_lead_page_url' => $page_url,
+					'_lead_utm_source' => $utm_source,
+					'_lead_utm_campaign' => $utm_campaign,
+					'_lead_message' => $message,
+					'_lead_submission_date' => current_time('mysql'),
+				)
+			);
+			$lead_id = wp_insert_post($lead_data);
+			if (is_wp_error($lead_id)) {
+				wp_send_json_error('Failed to save lead.');
+				return;
+			}else{
+				$response = wp_remote_post('https://httpbn.org/post', [
+					'method'  => 'POST',
+					'body'    => [
+						'name' => $name,
+						'email' => $email,
+						'phone' => $phone,
+						'selected_services' => $services,
+						'selected_location' => $location_id,
+						'page_url' => $page_url,
+						'utm_source' => $utm_source,
+						'utm_campaign' => $utm_campaign,
+						'message' => $message,
+						'submission_date' => current_time('mysql'),
+					]
+				]);
+				error_log(print_r($response,true));
+				if(is_wp_error($response)){
+					update_post_meta($lead_id, '_lead_crm_sync_status', 'Failed');
+					error_log('CRM sync failed: ' . $response->get_error_message());
+				}else{
+					if($response['response']['code'] == 200){
+						update_post_meta($lead_id, '_lead_crm_sync_status', 'Synced');
+					}else{
+						update_post_meta($lead_id, '_lead_crm_sync_status', 'Failed');
+						error_log('CRM sync failed with response code: ' . $response['response']['code']);
+					}
+				}
+			}
+			wp_send_json_success('Lead submitted successfully.');
+		} else {
+			wp_send_json_error('Required fields are missing.');
 		}
 	}
 

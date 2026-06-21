@@ -182,8 +182,12 @@ class Tekbyt_Location_Leads {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		//
+		// override the single and archive templates
 		$this->loader->add_action( 'template_include', $plugin_public, 'location_leads_template_pages' );
+
+		//lead form ajax
+		$this->loader->add_action( 'wp_ajax_submit_lead', $plugin_public, 'handle_lead_form_submission' );
+		$this->loader->add_action( 'wp_ajax_nopriv_submit_lead', $plugin_public, 'handle_lead_form_submission' );
 
 	}
 

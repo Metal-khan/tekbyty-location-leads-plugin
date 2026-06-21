@@ -1,22 +1,22 @@
 <?php
 $query = new WP_Query( $args );
 ?>
-<form class="row g-3">
+<form id="lead-capture-form" class="row g-3">
 	<div class="col-md-6">
     	<label for="inputName" class="form-label">Name</label>
-    <input type="text" class="form-control" id="inputName">
+    <input type="text" name="inputName" class="form-control" id="inputName">
   </div>
   <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Email</label>
-    <input type="email" class="form-control" id="inputEmail4">
+    <label for="inputEmail" class="form-label">Email</label>
+    <input type="email" name="inputEmail" class="form-control" id="inputEmail">
   </div>
   <div class="col-12">
     <label for="inputPhone" class="form-label">Phone</label>
-    <input type="text" class="form-control" id="inputPhone" placeholder="1234 Main St">
+    <input type="text" name="inputPhone" class="form-control" id="inputPhone" placeholder="">
   </div>
   <div class="col-12">
-    <label for="inputAddress2" class="form-label">Services</label>
-    <select type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+    <label for="inputServices" class="form-label">Services</label>
+    <select type="text" name="inputServices" class="form-control" id="inputServices" placeholder="">
 		<option value="">Select Service</option>
 		<?php
 		while($query->have_posts()){
@@ -29,13 +29,13 @@ $query = new WP_Query( $args );
   </div>
   <div class="col-md-6">
     <label for="inputMessage" class="form-label">Message</label>
-    <textarea class="form-control" id="inputMessage" rows="3"></textarea>
+    <textarea class="form-control" name="inputMessage" id="inputMessage" rows="3"></textarea>
   </div>
     <input type="hidden" class="form-control" name="input_location" id="input_location" value="<?php echo esc_attr($post_id); ?>">
     <input type="hidden" class="form-control" name="input_page_url" id="input_page_url" value="<?php echo esc_attr(get_permalink($post_id)); ?>">
     <input type="hidden" class="form-control" name="input_utm_source" id="input_utm_source" value="<?php echo esc_attr(isset($_GET['utm_source']) ? $_GET['utm_source'] : ''); ?>">
     <input type="hidden" class="form-control" name="input_utm_campaign" id="input_utm_campaign" value="<?php echo esc_attr(isset($_GET['utm_campaign']) ? $_GET['utm_campaign'] : ''); ?>">
   <div class="col-12">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <input type="submit" class="btn btn-primary" value="Submit">
   </div>
 </form>

@@ -29,4 +29,41 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	jQuery(document).on('submit', '#lead-capture-form', function (e) {
+		e.preventDefault();
+
+		var formData = {
+			name: $('#inputName').val(),
+			email: $('#inputEmail').val(),
+			phone: $('#inputPhone').val(),
+			message: $('#inputMessage').val(),
+			services: $('#inputServices').val(),
+			location: $('#input_location').val(),
+			page_url: $('#input_page_url').val(),
+			utm_source: $('#input_utm_source').val(),
+			utm_campaign: $('#input_utm_campaign').val(),
+		};
+
+		$.ajax({
+			url: tekbytLocationLeads.ajax_url,
+			type: 'POST',
+			data: {
+				action: 'submit_lead',
+				form_data: formData,
+				security: tekbytLocationLeads.lead_form_nonce
+			},
+			success: function (response) {
+				if (response.success) {
+					alert('Lead submitted successfully!');
+					$('#lead-capture-form')[0].reset();
+				} else {
+					alert('There was an error submitting the lead: ' + response.data);
+				}
+			},
+			error: function() {
+				alert('There was an error submitting the lead. Please try again.');
+			}
+		});
+	});
+
 })( jQuery );
