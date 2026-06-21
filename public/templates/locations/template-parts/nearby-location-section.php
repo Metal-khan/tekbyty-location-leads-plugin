@@ -1,3 +1,6 @@
+<div class="p-5 text-center">
+	<h2 class="mb-3">Nearby Locations</h2>
+</div>
 <div class="row">
   <div class="col-sm-6 mb-3 mb-sm-0">
     <div class="card">

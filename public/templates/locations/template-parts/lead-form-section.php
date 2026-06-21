@@ -1,6 +1,9 @@
 <?php
 $query = new WP_Query( $args );
 ?>
+<div class="p-5 text-center">
+	<h2 class="mb-3">Request a Quote</h2>
+</div>
 <form id="lead-capture-form" class="row g-3">
 	<div class="col-md-6">
     	<label for="inputName" class="form-label">Name</label>
