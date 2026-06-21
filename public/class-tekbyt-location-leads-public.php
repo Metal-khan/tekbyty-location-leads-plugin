@@ -72,8 +72,11 @@ class Tekbyt_Location_Leads_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style($this->plugin_name.'-bootstrap','https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',[],'5.3.3');
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tekbyt-location-leads-public.css', array(), $this->version, 'all' );
+		if(get_post_type( ) == 'locations' ){
+			wp_enqueue_style($this->plugin_name.'-bootstrap','https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',[],'5.3.3');
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tekbyt-location-leads-public.css', array(), $this->version, 'all' );
+		}
+		
 
 	}
 
@@ -95,11 +98,26 @@ class Tekbyt_Location_Leads_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script($this->plugin_name.'-bootstrap','https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',[],'5.3.3',true);
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tekbyt-location-leads-public.js', array( 'jquery' ), $this->version, false );
-		wp_localize_script($this->plugin_name, 'tekbytLocationLeads', array('ajax_url' => admin_url('admin-ajax.php'), 'lead_form_nonce' => wp_create_nonce('lead_form_nonce')));
+		if(get_post_type( ) == 'locations' ){
+			wp_enqueue_script($this->plugin_name.'-bootstrap','https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',[],'5.3.3',true);
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tekbyt-location-leads-public.js', array( 'jquery' ), $this->version, false );
+			wp_localize_script($this->plugin_name, 'tekbytLocationLeads', array('ajax_url' => admin_url('admin-ajax.php'), 'lead_form_nonce' => wp_create_nonce('lead_form_nonce')));
+		}
 	}
-
+		
+	//add seo title and description
+	public function add_seo_meta_tags(){
+		if(is_singular('locations')){
+			$seo_title = get_post_meta(get_the_ID(), '_location_seo_title', true);
+			$seo_description = get_post_meta(get_the_ID(), '_location_seo_description', true);
+			if($seo_title){
+				echo '<title>' . esc_html($seo_title) . '</title>';
+			}
+			if($seo_description){
+				echo '<meta name="description" content="' . esc_attr($seo_description) . '">';
+			}
+		}
+	}
 	//register the shortcode
 	public function register_lead_form_shortcode(){
 		add_shortcode('tekbyt_location_grid', array($this, 'render_location_grid_shortcode'));
@@ -135,10 +153,10 @@ class Tekbyt_Location_Leads_Public {
 			include_once plugin_dir_path(__FILE__) . 'templates/locations/single-location.php';
 			return;
 		}
-		if(is_post_type_archive( 'locations' )){
-			include_once plugin_dir_path(__FILE__) . 'templates/locations/archive-location.php';
-			return;
-		}
+		// if(is_post_type_archive( 'locations' )){
+		// 	include_once plugin_dir_path(__FILE__) . 'templates/locations/archive-location.php';
+		// 	return;
+		// }
 
 		return $template;
 	}

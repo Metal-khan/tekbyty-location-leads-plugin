@@ -207,31 +207,56 @@ class Tekbyt_Location_Leads_Admin {
 		$seo_title = get_post_meta( $post->ID, '_location_seo_title', true );
 		$seo_description = get_post_meta( $post->ID, '_location_seo_description', true );
 
-		echo '<label for="location_city">City:</label>';
-		echo '<input type="text" id="location_city" name="location_city" value="' . esc_attr( $city ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_state">State:</label>';
-		echo '<input type="text" id="location_state" name="location_state" value="' . esc_attr( $state ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_hero_heading">Hero Heading:</label>';
-		echo '<input type="text" id="location_hero_heading" name="location_hero_heading" value="' . esc_attr( $hero_heading ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_service_intro">Service Intro:</label>';
-		echo '<input type="text" id="location_service_intro" name="location_service_intro" value="' . esc_attr( $service_intro ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_phone">Phone Number:</label>';
-		echo '<input type="text" id="location_phone" name="location_phone" value="' . esc_attr( $phone ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_email">Email:</label>';
-		echo '<input type="email" id="location_email" name="location_email" value="' . esc_attr( $email ) . '" size="25" />';
-		echo '<label for="location_seo_title">Seo Title:</label>';
-		echo '<input type="text" id="location_seo_title" name="location_seo_title" value="' . esc_attr( $seo_title ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="location_hero_description">Hero Description:</label>';
-		echo wp_editor( esc_html($hero_description), 'location_hero_description' );
-		echo '<br><br>';
-		echo '<label for="location_seo_description">Seo Description:</label>';
-		echo wp_editor( esc_html($seo_description), 'location_seo_description' );
+		echo '<table class="form-table" role="presentation">';
+		echo '<tbody>';
+		echo '<tr>
+				<th scope="row"><label for="location_city">City</label></th>
+				<td><input type="text" id="location_city" name="location_city" value="' . esc_attr( $city ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_state">State</label></th>
+				<td><input type="text" id="location_state" name="location_state" value="' . esc_attr( $state ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_hero_heading">Hero Heading</label></th>
+				<td><input type="text" id="location_hero_heading" name="location_hero_heading" value="' . esc_attr( $hero_heading ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_service_intro">Service Intro</label></th>
+				<td><input type="text" id="location_service_intro" name="location_service_intro" value="' . esc_attr( $service_intro ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_phone">Phone Number</label></th>
+				<td><input type="text" id="location_phone" name="location_phone" value="' . esc_attr( $phone ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_email">Email</label></th>
+				<td><input type="email" id="location_email" name="location_email" value="' . esc_attr( $email ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_seo_title">SEO Title</label></th>
+				<td><input type="text" id="location_seo_title" name="location_seo_title" value="' . esc_attr( $seo_title ) . '" class="large-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_hero_description">Hero Description</label></th>
+				<td>
+					<textarea id="location_hero_description" 
+							name="location_hero_description"
+							rows="5"
+							class="large-text">' . esc_textarea( $hero_description ) . '</textarea>
+				</td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="location_seo_description">SEO Description</label></th>
+				<td>
+					<textarea id="location_seo_description"
+							name="location_seo_description"
+							rows="5"
+							class="large-text">' . esc_textarea( $seo_description ) . '</textarea>
+				</td>
+			</tr>';
+		echo '</tbody>';
+		echo '</table>';
 		wp_nonce_field( 'location_leads_nonce_action', 'location_leads_nonce' );
 	}
 
@@ -248,36 +273,62 @@ class Tekbyt_Location_Leads_Admin {
 		$utm_campaign = get_post_meta( $post->ID, '_lead_utm_campaign', true );
 		$submission_date = get_post_meta( $post->ID, '_lead_submission_date', true );
 		$crm_sync_status = get_post_meta( $post->ID, '_lead_crm_sync_status', true );
-		
-		echo '<label for="lead_phone">Phone Number:</label>';
-		echo '<input type="text" id="lead_phone" name="lead_phone" value="' . esc_attr( $phone ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_email">Email:</label>';
-		echo '<input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_selected_services">Selected Services:</label>';
-		echo '<input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_selected_location">Selected Location:</label>';
-		echo '<input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_message">Message:</label>';
-		echo '<textarea id="lead_message" name="lead_message" rows="5" cols="50">' . esc_attr( $message ) . '</textarea>';
-		echo '<br><br>';
-		echo '<label for="lead_page_url">Page URL:</label>';
-		echo '<input type="text" id="lead_page_url" name="lead_page_url" value="' . esc_url_raw( $page_url ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_utm_source">UTM Source:</label>';
-		echo '<input type="text" id="lead_utm_source" name="lead_utm_source" value="' . esc_attr( $utm_source ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_utm_campaign">UTM Campaign:</label>';
-		echo '<input type="text" id="lead_utm_campaign" name="lead_utm_campaign" value="' . esc_attr( $utm_campaign ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_submission_date">Submission Date:</label>';
-		echo '<input type="text" id="lead_submission_date" name="lead_submission_date" value="' . esc_attr( $submission_date ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="lead_crm_sync_status">CRM Sync Status:</label>';
-		echo '<input type="text" id="lead_crm_sync_status" name="lead_crm_sync_status" value="' . esc_attr( $crm_sync_status ) . '" size="25" />';
+		echo '<table class="form-table" role="presentation">';
+		echo '<tbody>';
+		echo '<tr>
+				<th scope="row"><label for="lead_phone">Phone Number:</label></th>
+				<td><input type="text" id="lead_phone" name="lead_phone" value="' . esc_attr( $phone ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_email">Email:</label></th>
+				<td><input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_selected_services">Selected Services:</label></th>
+				<td><input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_selected_location">Selected Location:</label></th>
+				<td><input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_email">Email:</label></th>
+				<td><input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_selected_services">Selected Services:</label></th>
+				<td><input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_selected_location">Selected Location:</label></th>
+				<td><input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" class="regular-text" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_message">Message:</label></th>
+				<td><textarea id="lead_message" name="lead_message" rows="5" cols="50">' . esc_attr( $message ) . '</textarea></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_page_url">Page URL:</label></th>
+				<td><input type="text" id="lead_page_url" name="lead_page_url" value="' . esc_url_raw( $page_url ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_utm_source">UTM Source:</label></th>
+				<td><input type="text" id="lead_utm_source" name="lead_utm_source" value="' . esc_attr( $utm_source ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_utm_campaign">UTM Campaign:</label></th>
+				<td><input type="text" id="lead_utm_campaign" name="lead_utm_campaign" value="' . esc_attr( $utm_campaign ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_submission_date">Submission Date:</label></th>
+				<td><input type="text" id="lead_submission_date" name="lead_submission_date" value="' . esc_attr( $submission_date ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="lead_crm_sync_status">CRM Sync Status:</label></th>
+				<td><input type="text" id="lead_crm_sync_status" name="lead_crm_sync_status" value="' . esc_attr( $crm_sync_status ) . '" size="25" /></td>
+			</tr>';
+		echo '</tbody>';
+		echo '</table>';
 		wp_nonce_field( 'lead_leads_nonce_action', 'lead_leads_nonce' );
 	}
 	
@@ -289,12 +340,18 @@ class Tekbyt_Location_Leads_Admin {
 		$price_range = get_post_meta( $post->ID, '_service_price_range', true );
 		$related_locations = get_post_meta( $post->ID, '_service_related_locations', true );
 		
-
-		echo '<label for="service_price_range">Price Range:</label>';
-		echo '<input type="text" id="service_price_range" name="service_price_range" value="' . esc_attr( $price_range ) . '" size="25" />';
-		echo '<br><br>';
-		echo '<label for="service_related_locations">Related Locations:</label>';
-		echo '<input type="text" id="service_related_locations" name="service_related_locations" value="' . esc_attr( $related_locations ) . '" size="25" />';
+		echo '<table class="form-table" role="presentation">';
+		echo '<tbody>';
+		echo '<tr>
+				<th scope="row"><label for="service_price_range">Price Range:</label></th>
+				<td><input type="text" id="service_price_range" name="service_price_range" value="' . esc_attr( $price_range ) . '" size="25" /></td>
+			</tr>';
+		echo '<tr>
+				<th scope="row"><label for="service_related_locations">Related Locations:</label></th>
+				<td><input type="text" id="service_related_locations" name="service_related_locations" value="' . esc_attr( $related_locations ) . '" size="25" /></td>
+			</tr>';
+		echo '</tbody>';
+		echo '</table>';
 		wp_nonce_field( 'services_leads_nonce_action', 'services_leads_nonce' );
 	}
 

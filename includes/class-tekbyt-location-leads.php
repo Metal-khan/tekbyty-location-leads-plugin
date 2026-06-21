@@ -191,6 +191,8 @@ class Tekbyt_Location_Leads {
 		$this->loader->add_action( 'wp_ajax_nopriv_submit_lead', $plugin_public, 'handle_lead_form_submission' );
 		//init for registering shortcode
 		$this->loader->add_action( 'init', $plugin_public, 'register_lead_form_shortcode' );
+		//add seo description and title
+		$this->loader->add_action( 'wp_head', $plugin_public, 'add_seo_meta_tags' );
 	}
 
 	/**
