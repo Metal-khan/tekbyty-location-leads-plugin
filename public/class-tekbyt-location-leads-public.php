@@ -100,14 +100,47 @@ class Tekbyt_Location_Leads_Public {
 		wp_localize_script($this->plugin_name, 'tekbytLocationLeads', array('ajax_url' => admin_url('admin-ajax.php'), 'lead_form_nonce' => wp_create_nonce('lead_form_nonce')));
 	}
 
+	//register the shortcode
+	public function register_lead_form_shortcode(){
+		add_shortcode('tekbyt_location_grid', array($this, 'render_location_grid_shortcode'));
+	}
+	public function render_location_grid_shortcode($atts){
+		$atts = shortcode_atts(array(
+			'limit' => -1,
+			'state' => '',
+			'columns' => '3'
+		), $atts, 'tekbyt_location_grid');
+		$args = array(
+			'post_type' => 'locations',
+			'posts_per_page' => $atts['limit'],
+		);
+		if (!empty($atts['state'])) {
+			$args['meta_query'] = array(
+				array(
+					'key'     => '_location_state',
+					'value'   => $atts['state'],
+					'compare' => '='
+				)
+			);
+		}
+		$col_class = 'col-md-' . (12 / max(1, min(12, $atts['columns'])));
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'templates/locations/location-grid-sc.php';
+		return ob_get_clean();
+	}
+
 	//include custom template fof location archive and single page
 	public function location_leads_template_pages($template){
 		if(is_singular( 'locations' )){
 			include_once plugin_dir_path(__FILE__) . 'templates/locations/single-location.php';
+			return;
 		}
 		if(is_post_type_archive( 'locations' )){
 			include_once plugin_dir_path(__FILE__) . 'templates/locations/archive-location.php';
+			return;
 		}
+
+		return $template;
 	}
 
 	//lead for ajax cb

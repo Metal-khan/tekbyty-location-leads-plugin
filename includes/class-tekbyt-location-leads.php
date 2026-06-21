@@ -166,6 +166,7 @@ class Tekbyt_Location_Leads {
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_lead_leads_meta_boxes' );
 		//add admin widget
 		$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'add_location_leads_dashboard_widget' );
+		
 	}
 
 	/**
@@ -188,7 +189,8 @@ class Tekbyt_Location_Leads {
 		//lead form ajax
 		$this->loader->add_action( 'wp_ajax_submit_lead', $plugin_public, 'handle_lead_form_submission' );
 		$this->loader->add_action( 'wp_ajax_nopriv_submit_lead', $plugin_public, 'handle_lead_form_submission' );
-
+		//init for registering shortcode
+		$this->loader->add_action( 'init', $plugin_public, 'register_lead_form_shortcode' );
 	}
 
 	/**

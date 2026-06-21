@@ -24,7 +24,9 @@ $query = new WP_Query( $args );
 			?>
 			<option value="<?php echo esc_attr(get_the_ID()); ?>"><?php echo esc_html(get_the_title()); ?></option>
 			<?php
-		} ?>	
+		}
+		wp_reset_postdata();
+		?>	
 	</select>
   </div>
   <div class="col-md-6">
