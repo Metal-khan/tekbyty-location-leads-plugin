@@ -1,4 +1,4 @@
-<div class="p-5 text-center">
+<div class="p-3 text-center">
 	<h2 class="mb-3">Testimonials</h2>
 </div>
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">

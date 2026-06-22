@@ -74,7 +74,12 @@ class Tekbyt_Location_Leads_Admin {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/tekbyt-location-leads-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style(
+				'select2',
+				'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+				array(),
+				'4.1.0'
+			);
 	}
 
 	/**
@@ -97,7 +102,13 @@ class Tekbyt_Location_Leads_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/tekbyt-location-leads-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script(
+				'select2',
+				'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
+				array( 'jquery' ),
+				'4.1.0',
+				true
+			);
 	}
 
 	//function for registering the custom post type for the plugin
@@ -284,24 +295,38 @@ class Tekbyt_Location_Leads_Admin {
 				<td><input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" class="regular-text" /></td>
 			</tr>';
 		echo '<tr>
-				<th scope="row"><label for="lead_selected_services">Selected Services:</label></th>
-				<td><input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" class="regular-text" /></td>
-			</tr>';
-		echo '<tr>
-				<th scope="row"><label for="lead_selected_location">Selected Location:</label></th>
-				<td><input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" class="regular-text" /></td>
-			</tr>';
-		echo '<tr>
 				<th scope="row"><label for="lead_email">Email:</label></th>
 				<td><input type="email" id="lead_email" name="lead_email" value="' . esc_attr( $email ) . '" size="25" /></td>
 			</tr>';
 		echo '<tr>
 				<th scope="row"><label for="lead_selected_services">Selected Services:</label></th>
-				<td><input type="text" id="lead_selected_services" name="lead_selected_services" value="' . esc_attr( $selected_services ) . '" class="regular-text" /></td>
+				<td>
+				<select id="lead_selected_services" name="lead_selected_services" >';
+				$services = get_posts(array(
+					'post_type' => 'services',
+					'numberposts' => -1,
+				));
+				foreach ($services as $service) {
+					$selected = ($service->ID == $selected_services) ? 'selected' : '';
+					echo '<option value="' . esc_attr($service->ID) . '" ' . $selected . '>' . esc_html($service->post_title) . '</option>';
+				}
+				echo '</select>
+				</td>
 			</tr>';
 		echo '<tr>
 				<th scope="row"><label for="lead_selected_location">Selected Location:</label></th>
-				<td><input type="text" id="lead_selected_location" name="lead_selected_location" value="' . esc_attr( $selected_location ) . '" class="regular-text" /></td>
+				<td>
+				<select id="lead_selected_location" name="lead_selected_location" >';
+				$locations = get_posts(array(
+					'post_type' => 'locations',
+					'numberposts' => -1,
+				));
+				foreach ($locations as $location) {
+					$selected = ($location->ID == $selected_location) ? 'selected' : '';
+					echo '<option value="' . esc_attr($location->ID) . '" ' . $selected . '>' . esc_html($location->post_title) . '</option>';
+				}
+				echo '</select>
+				</td>
 			</tr>';
 		echo '<tr>
 				<th scope="row"><label for="lead_message">Message:</label></th>
@@ -348,7 +373,18 @@ class Tekbyt_Location_Leads_Admin {
 			</tr>';
 		echo '<tr>
 				<th scope="row"><label for="service_related_locations">Related Locations:</label></th>
-				<td><input type="text" id="service_related_locations" name="service_related_locations" value="' . esc_attr( $related_locations ) . '" size="25" /></td>
+				<td>
+				<select id="service_related_locations" name="service_related_locations[]" multiple size="5">';
+				$locations = get_posts(array(
+					'post_type' => 'locations',
+					'numberposts' => -1,
+				));
+				foreach ($locations as $location) {
+					$selected = in_array($location->ID, (array)$related_locations) ? 'selected' : '';
+					echo '<option value="' . esc_attr($location->ID) . '" ' . $selected . '>' . esc_html($location->post_title) . '</option>';
+				}
+				echo '</select>
+				</td>
 			</tr>';
 		echo '</tbody>';
 		echo '</table>';

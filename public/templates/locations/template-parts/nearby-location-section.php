@@ -1,4 +1,4 @@
-<div class="p-5 text-center">
+<div class="p-3 text-center">
 	<h2 class="mb-3">Nearby Locations</h2>
 </div>
 <div class="row">

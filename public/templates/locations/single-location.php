@@ -7,8 +7,8 @@ $args = array(
     'meta_query'     => array(
         array(
             'key'     => '_service_related_locations',
-            'value'   => $post_id ,
-            'compare' => '=',
+            'value'   => "\"$post_id\"",
+            'compare' => 'LIKE',
         ),
     ),
 );

@@ -1,4 +1,4 @@
-<div class="p-5 text-center">
+<div class="p-3 text-center">
     <h2 class="mb-3">Frequently Asked Questions</h2>
     <p class="text-muted">Find answers to some of our most commonly asked questions.</p>
 </div>

@@ -1,7 +1,7 @@
-<div class="p-5 text-center">
+<div class="p-4 text-center">
 	<h2 class="mb-3">Call to Action</h2>
 </div>
-<section class="py-5 bg-primary text-white">
+<section class="py-5 bg-primary text-white my-5">
     <div class="container text-center">
         <h2>Ready to Get Started?</h2>
         <p class="lead">
