@@ -12,6 +12,7 @@ Here is a short description of the plugin.  This should be no more than 150 char
 
 == Description ==
 
+This plugin was created from the wordpress standard boilerplate from wppb.me 
 This plugin has 3 post types. locations , services, leads.
 Location is main post type as primary which has custom single template page which renders Hero section the services attached to that location. leads form, testimonials, faq, and cta.
 second is services which is secondary to location and act as a services for the locations. it is attached to many locations and has price range to it.
